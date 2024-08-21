@@ -1,1 +1,71 @@
-# PaymentAPI
+Sistema Bancário
+Descrição
+Este projeto é um sistema bancário que possui um frontend em HTML e Bootstrap e um backend em Express. O sistema permite o gerenciamento de clientes, contas, transações e categorias, bem como o registro de endereços dos clientes.
+
+Entidades e Seus Atributos
+Cliente
+id_cliente (PK): Identificador único do cliente.
+numero_conta: Número da conta.
+nome_cliente: Nome do cliente.
+data_nascimento: Data de nascimento.
+data_criacao_conta: Data de criação da conta.
+saldo: Saldo atual da conta.
+Transação
+id_transacao (PK): Identificador único da transação.
+entradas: Valor total das entradas.
+saidas: Valor total das saídas.
+valor: Valor da transação.
+data: Data da transação.
+tipo_transacao: Tipo da transação (pix, depósito bancário, etc.).
+id_cliente_envio (FK): Cliente que enviou o valor.
+id_cliente_recebimento (FK): Cliente que recebeu o valor.
+Conta
+id_conta (PK): Identificador único da conta.
+numero_conta: Número da conta.
+data_abertura: Data de abertura da conta.
+id_cliente (FK): Cliente associado à conta.
+Categoria
+id_categoria (PK): Identificador único da categoria.
+nome_categoria: Nome da categoria (ex.: 'Alimentação', 'Transporte').
+TransacaoCategoria
+id_transacao_categoria (PK): Identificador único.
+id_transacao (FK): Transação associada.
+id_categoria (FK): Categoria associada.
+ClienteEndereco
+id_endereco (PK): Identificador único do endereço.
+logradouro: Logradouro.
+numero: Número do endereço.
+bairro: Bairro.
+cidade: Cidade.
+estado: Estado.
+cep: CEP.
+id_cliente (FK): Cliente associado ao endereço.
+Relacionamentos Entre Entidades
+Cliente - Conta
+Um Cliente pode ter uma ou mais Contas.
+Uma Conta pertence a um único Cliente.
+Cliente - Transação (Envio)
+Um Cliente pode enviar muitas Transações.
+Uma Transação tem um único Cliente como remetente (id_cliente_envio).
+Cliente - Transação (Recebimento)
+Um Cliente pode receber muitas Transações.
+Uma Transação tem um único Cliente como destinatário (id_cliente_recebimento).
+Transação - Categoria
+Uma Transação pode ter uma ou mais Categorias associadas.
+Uma Categoria pode ser associada a várias Transações.
+Relacionamento gerenciado pela entidade TransacaoCategoria.
+Cliente - ClienteEndereco
+Um Cliente pode ter vários Endereços.
+Um Endereco pertence a um único Cliente.
+Conta - Transação
+Uma Conta pode estar envolvida em muitas Transações (enviadas e recebidas).
+Uma Transação pode afetar várias Contas (por exemplo, se envolver transferências entre contas).
+Categoria - TransacaoCategoria
+Uma Categoria pode estar associada a várias Transações através da entidade de relacionamento TransacaoCategoria.
+TransacaoCategoria liga Transacao e Categoria.
+ClienteEndereco - Cliente
+Um ClienteEndereco está associado a um único Cliente.
+Um Cliente pode ter múltiplos ClienteEnderecos.
+Conta - Cliente
+Uma Conta está vinculada a um único Cliente.
+Um Cliente pode ter várias Contas.
