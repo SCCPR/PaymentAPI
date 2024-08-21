@@ -1,3 +1,3 @@
-let agencies = [];
+let agencias = [];
 
-module.exports = agencies;
+module.exports = agencias;

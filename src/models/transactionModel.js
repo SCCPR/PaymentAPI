@@ -1,3 +1,3 @@
-let transactions = [];
+let transacoes = [];
 
-module.exports = transactions;
+module.exports = transacoes;

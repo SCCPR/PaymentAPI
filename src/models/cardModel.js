@@ -1,3 +1,3 @@
-let cards = [];
+let cartoes = [];
 
-module.exports = cards;
+module.exports = cartoes;

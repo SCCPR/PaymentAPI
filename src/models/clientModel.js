@@ -1,3 +1,3 @@
-let clients = [];
+let clientes = [];
 
-module.exports = clients;
+module.exports = clientes;

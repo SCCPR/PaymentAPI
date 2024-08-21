@@ -1,40 +1,42 @@
-const agencies = require('../models/agencyModel');
+const agencias = [];
 
-exports.getAllAgencies = (req, res) => {
-  res.json(agencies);
+exports.getTodasAgencias = (req, res) => {
+  res.json(agencias);
 };
 
-exports.createAgency = (req, res) => {
-  const agency = req.body;
-  agencies.push(agency);
-  res.status(201).json(agency);
+exports.criarAgencia = (req, res) => {
+  const agencia = req.body;
+  agencias.push(agencia);
+  res.status(201).json(agencia);
 };
 
-exports.getAgencyById = (req, res) => {
-  const agency = agencies.find(a => a.id === req.params.id);
-  if (agency) {
-    res.json(agency);
+exports.getAgenciaPorId = (req, res) => {
+  const agencia = agencias.find(a => a.id === parseInt(req.params.id));
+  if (agencia) {
+    res.json(agencia);
   } else {
-    res.status(404).json({ message: 'Agency not found' });
+    res.status(404).json({ mensagem: 'Agência não encontrada' });
   }
 };
 
-exports.updateAgency = (req, res) => {
-  const index = agencies.findIndex(a => a.id === req.params.id);
+exports.atualizarAgencia = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = agencias.findIndex(a => a.id === id);
   if (index !== -1) {
-    agencies[index] = { ...agencies[index], ...req.body };
-    res.json(agencies[index]);
+    agencias[index] = { id, ...req.body };
+    res.json(agencias[index]);
   } else {
-    res.status(404).json({ message: 'Agency not found' });
+    res.status(404).json({ mensagem: 'Agência não encontrada' });
   }
 };
 
-exports.deleteAgency = (req, res) => {
-  const index = agencies.findIndex(a => a.id === req.params.id);
+exports.deletarAgencia = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = agencias.findIndex(a => a.id === id);
   if (index !== -1) {
-    agencies.splice(index, 1);
+    agencias.splice(index, 1);
     res.status(204).end();
   } else {
-    res.status(404).json({ message: 'Agency not found' });
+    res.status(404).json({ mensagem: 'Agência não encontrada' });
   }
 };

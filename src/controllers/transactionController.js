@@ -1,40 +1,42 @@
-const transactions = require('../models/transactionModel');
+const transacoes = [];
 
-exports.getAllTransactions = (req, res) => {
-  res.json(transactions);
+exports.getTodasTransacoes = (req, res) => {
+  res.json(transacoes);
 };
 
-exports.createTransaction = (req, res) => {
-  const transaction = req.body;
-  transactions.push(transaction);
-  res.status(201).json(transaction);
+exports.criarTransacao = (req, res) => {
+  const transacao = req.body;
+  transacoes.push(transacao);
+  res.status(201).json(transacao);
 };
 
-exports.getTransactionById = (req, res) => {
-  const transaction = transactions.find(t => t.id === req.params.id);
-  if (transaction) {
-    res.json(transaction);
+exports.getTransacaoPorId = (req, res) => {
+  const transacao = transacoes.find(t => t.id === parseInt(req.params.id));
+  if (transacao) {
+    res.json(transacao);
   } else {
-    res.status(404).json({ message: 'Transaction not found' });
+    res.status(404).json({ mensagem: 'Transação não encontrada' });
   }
 };
 
-exports.updateTransaction = (req, res) => {
-  const index = transactions.findIndex(t => t.id === req.params.id);
+exports.atualizarTransacao = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = transacoes.findIndex(t => t.id === id);
   if (index !== -1) {
-    transactions[index] = { ...transactions[index], ...req.body };
-    res.json(transactions[index]);
+    transacoes[index] = { id, ...req.body };
+    res.json(transacoes[index]);
   } else {
-    res.status(404).json({ message: 'Transaction not found' });
+    res.status(404).json({ mensagem: 'Transação não encontrada' });
   }
 };
 
-exports.deleteTransaction = (req, res) => {
-  const index = transactions.findIndex(t => t.id === req.params.id);
+exports.deletarTransacao = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = transacoes.findIndex(t => t.id === id);
   if (index !== -1) {
-    transactions.splice(index, 1);
+    transacoes.splice(index, 1);
     res.status(204).end();
   } else {
-    res.status(404).json({ message: 'Transaction not found' });
+    res.status(404).json({ mensagem: 'Transação não encontrada' });
   }
 };

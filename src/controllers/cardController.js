@@ -1,40 +1,42 @@
-const cards = require('../models/cardModel');
+const cartoes = [];
 
-exports.getAllCards = (req, res) => {
-  res.json(cards);
+exports.getTodosCartoes = (req, res) => {
+  res.json(cartoes);
 };
 
-exports.createCard = (req, res) => {
-  const card = req.body;
-  cards.push(card);
-  res.status(201).json(card);
+exports.criarCartao = (req, res) => {
+  const cartao = req.body;
+  cartoes.push(cartao);
+  res.status(201).json(cartao);
 };
 
-exports.getCardById = (req, res) => {
-  const card = cards.find(c => c.id === req.params.id);
-  if (card) {
-    res.json(card);
+exports.getCartaoPorId = (req, res) => {
+  const cartao = cartoes.find(c => c.id === parseInt(req.params.id));
+  if (cartao) {
+    res.json(cartao);
   } else {
-    res.status(404).json({ message: 'Card not found' });
+    res.status(404).json({ mensagem: 'Cartão não encontrado' });
   }
 };
 
-exports.updateCard = (req, res) => {
-  const index = cards.findIndex(c => c.id === req.params.id);
+exports.atualizarCartao = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = cartoes.findIndex(c => c.id === id);
   if (index !== -1) {
-    cards[index] = { ...cards[index], ...req.body };
-    res.json(cards[index]);
+    cartoes[index] = { id, ...req.body };
+    res.json(cartoes[index]);
   } else {
-    res.status(404).json({ message: 'Card not found' });
+    res.status(404).json({ mensagem: 'Cartão não encontrado' });
   }
 };
 
-exports.deleteCard = (req, res) => {
-  const index = cards.findIndex(c => c.id === req.params.id);
+exports.deletarCartao = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = cartoes.findIndex(c => c.id === id);
   if (index !== -1) {
-    cards.splice(index, 1);
+    cartoes.splice(index, 1);
     res.status(204).end();
   } else {
-    res.status(404).json({ message: 'Card not found' });
+    res.status(404).json({ mensagem: 'Cartão não encontrado' });
   }
 };

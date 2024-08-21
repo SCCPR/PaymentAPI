@@ -1,40 +1,47 @@
-const accounts = require('../models/accountModel');
+const contas = [];
 
-exports.getAllAccounts = (req, res) => {
-  res.json(accounts);
+
+exports.getTodasContas = (req, res) => {
+  res.json(contas);
 };
 
-exports.createAccount = (req, res) => {
-  const account = req.body;
-  accounts.push(account);
-  res.status(201).json(account);
+
+exports.criarConta = (req, res) => {
+  const conta = req.body;
+  contas.push(conta);
+  res.status(201).json(conta);
 };
 
-exports.getAccountById = (req, res) => {
-  const account = accounts.find(a => a.id === req.params.id);
-  if (account) {
-    res.json(account);
+
+exports.getContaPorId = (req, res) => {
+  const conta = contas.find(c => c.id === parseInt(req.params.id));
+  if (conta) {
+    res.json(conta);
   } else {
-    res.status(404).json({ message: 'Account not found' });
+    res.status(404).json({ mensagem: 'Conta não encontrada' });
   }
 };
 
-exports.updateAccount = (req, res) => {
-  const index = accounts.findIndex(a => a.id === req.params.id);
+
+exports.atualizarConta = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = contas.findIndex(c => c.id === id);
   if (index !== -1) {
-    accounts[index] = { ...accounts[index], ...req.body };
-    res.json(accounts[index]);
+    contas[index] = { id, ...req.body };
+    res.json(contas[index]);
   } else {
-    res.status(404).json({ message: 'Account not found' });
+    res.status(404).json({ mensagem: 'Conta não encontrada' });
   }
 };
 
-exports.deleteAccount = (req, res) => {
-  const index = accounts.findIndex(a => a.id === req.params.id);
+
+exports.deletarConta = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = contas.findIndex(c => c.id === id);
   if (index !== -1) {
-    accounts.splice(index, 1);
+    contas.splice(index, 1);
     res.status(204).end();
   } else {
-    res.status(404).json({ message: 'Account not found' });
+    res.status(404).json({ mensagem: 'Conta não encontrada' });
   }
 };

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const cardController = require('../controllers/cardController');
+const controladorCartoes = require('../controllers/cardController');
 
-router.get('/cards', cardController.getAllCards);
-router.post('/cards', cardController.createCard);
-router.get('/cards/:id', cardController.getCardById);
-router.put('/cards/:id', cardController.updateCard);
-router.delete('/cards/:id', cardController.deleteCard);
+router.get('/cartoes', controladorCartoes.getTodosCartoes);
+router.post('/cartoes', controladorCartoes.criarCartao);
+router.get('/cartoes/:id', controladorCartoes.getCartaoPorId);
+router.put('/cartoes/:id', controladorCartoes.atualizarCartao);
+router.delete('/cartoes/:id', controladorCartoes.deletarCartao);
 
 module.exports = router;

@@ -1,40 +1,42 @@
-const clients = require('../models/clientModel');
+const clientes = [];
 
-exports.getAllClients = (req, res) => {
-  res.json(clients);
+exports.getTodosClientes = (req, res) => {
+  res.json(clientes);
 };
 
-exports.createClient = (req, res) => {
-  const client = req.body;
-  clients.push(client);
-  res.status(201).json(client);
+exports.criarCliente = (req, res) => {
+  const cliente = req.body;
+  clientes.push(cliente);
+  res.status(201).json(cliente);
 };
 
-exports.getClientById = (req, res) => {
-  const client = clients.find(c => c.id === req.params.id);
-  if (client) {
-    res.json(client);
+exports.getClientePorId = (req, res) => {
+  const cliente = clientes.find(c => c.id === parseInt(req.params.id));
+  if (cliente) {
+    res.json(cliente);
   } else {
-    res.status(404).json({ message: 'Client not found' });
+    res.status(404).json({ mensagem: 'Cliente não encontrado' });
   }
 };
 
-exports.updateClient = (req, res) => {
-  const index = clients.findIndex(c => c.id === req.params.id);
+exports.atualizarCliente = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = clientes.findIndex(c => c.id === id);
   if (index !== -1) {
-    clients[index] = { ...clients[index], ...req.body };
-    res.json(clients[index]);
+    clientes[index] = { id, ...req.body };
+    res.json(clientes[index]);
   } else {
-    res.status(404).json({ message: 'Client not found' });
+    res.status(404).json({ mensagem: 'Cliente não encontrado' });
   }
 };
 
-exports.deleteClient = (req, res) => {
-  const index = clients.findIndex(c => c.id === req.params.id);
+exports.deletarCliente = (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = clientes.findIndex(c => c.id === id);
   if (index !== -1) {
-    clients.splice(index, 1);
+    clientes.splice(index, 1);
     res.status(204).end();
   } else {
-    res.status(404).json({ message: 'Client not found' });
+    res.status(404).json({ mensagem: 'Cliente não encontrado' });
   }
 };
