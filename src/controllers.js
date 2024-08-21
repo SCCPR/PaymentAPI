@@ -1,92 +1,93 @@
-// src/controllers.js
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+
 const app = express();
-const port = 3000;
+app.use(express.json());
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+const usersFilePath = path.resolve('users.json');
 
-// Dados Iniciais
-let clientes = [];
-let contas = [];
-let transacoes = [];
-let categorias = [];
+// Função para ler os usuários do arquivo
+const readUsersFromFile = () => {
+    try {
+        const data = fs.readFileSync(usersFilePath, 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        return [];
+    }
+};
 
-// Endpoints
+// Função para escrever os usuários no arquivo
+const writeUsersToFile = (users) => {
+    fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2), 'utf8');
+};
 
-// Adicionar Cliente
-app.post('/clientes', (req, res) => {
-    const { nome_cliente, data_nascimento, numero_conta, saldo } = req.body;
-    const id_cliente = clientes.length + 1;
-    const data_criacao_conta = new Date().toISOString().split('T')[0];
-    clientes.push({ id_cliente, nome_cliente, data_nascimento, numero_conta, data_criacao_conta, saldo });
-    res.status(201).json({ message: 'Cliente adicionado com sucesso!' });
-});
-
-// Listar Clientes
-app.get('/clientes', (req, res) => {
-    res.json(clientes);
-});
-
-// Adicionar Conta
-app.post('/contas', (req, res) => {
-    const { numero_conta, id_cliente } = req.body;
-    const id_conta = contas.length + 1;
-    const data_abertura = new Date().toISOString().split('T')[0];
-    contas.push({ id_conta, numero_conta, data_abertura, id_cliente });
-    res.status(201).json({ message: 'Conta adicionada com sucesso!' });
-});
-
-// Listar Contas
-app.get('/contas', (req, res) => {
-    res.json(contas);
-});
-
-// Realizar Transação
-app.post('/transacoes', (req, res) => {
-    const { id_cliente_envio, id_cliente_recebimento, valor, tipo_transacao } = req.body;
-    const id_transacao = transacoes.length + 1;
-    const data = new Date().toISOString().split('T')[0];
-
-    const clienteEnvio = clientes.find(cliente => cliente.id_cliente === id_cliente_envio);
-    const clienteRecebimento = clientes.find(cliente => cliente.id_cliente === id_cliente_recebimento);
-
-    if (clienteEnvio && clienteRecebimento) {
-        if (clienteEnvio.saldo >= valor) {
-            clienteEnvio.saldo -= valor;
-            clienteRecebimento.saldo += valor;
-            transacoes.push({ id_transacao, id_cliente_envio, id_cliente_recebimento, valor, tipo_transacao, data });
-            res.status(201).json({ message: 'Transação realizada com sucesso!' });
-        } else {
-            res.status(400).json({ message: 'Saldo insuficiente.' });
-        }
-    } else {
-        res.status(404).json({ message: 'Clientes não encontrados.' });
+// Rota POST para adicionar um novo usuário
+app.post('/user', (req, res) => {
+    try {
+        const users = readUsersFromFile();
+        const newUser = {
+            id: users.length + 1, // Incrementa o ID de forma simples
+            email: req.body.email,
+            name: req.body.name,
+            age: req.body.age,
+        };
+        users.push(newUser);
+        writeUsersToFile(users);
+        res.status(201).json(newUser);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao criar usuário' });
     }
 });
 
-// Listar Transações
-app.get('/transacoes', (req, res) => {
-    res.json(transacoes);
+// Rota GET para retornar todos os usuários
+app.get('/user', (req, res) => {
+    try {
+        const users = readUsersFromFile();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar usuários' });
+    }
 });
 
-// Adicionar Categoria
-app.post('/categorias', (req, res) => {
-    const { nome_categoria } = req.body;
-    const id_categoria = categorias.length + 1;
-    categorias.push({ id_categoria, nome_categoria });
-    res.status(201).json({ message: 'Categoria adicionada com sucesso!' });
+// Rota PUT para atualizar um usuário pelo ID
+app.put('/user/:id', (req, res) => {
+    try {
+        const users = readUsersFromFile();
+        const userIndex = users.findIndex(user => user.id === parseInt(req.params.id));
+
+        if (userIndex === -1) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        users[userIndex] = {
+            ...users[userIndex],
+            email: req.body.email,
+            name: req.body.name,
+            age: req.body.age,
+        };
+
+        writeUsersToFile(users);
+        res.status(200).json(users[userIndex]);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao atualizar usuário' });
+    }
 });
 
-// Listar Categorias
-app.get('/categorias', (req, res) => {
-    res.json(categorias);
+// Rota DELETE para remover um usuário pelo ID
+app.delete('/user/:id', (req, res) => {
+    try {
+        let users = readUsersFromFile();
+        users = users.filter(user => user.id !== parseInt(req.params.id));
+
+        writeUsersToFile(users);
+        res.status(200).json({ message: 'Usuário deletado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao deletar usuário' });
+    }
 });
 
-// Iniciar o Servidor
-app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+// Inicia o servidor na porta 3000
+app.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
 });
