@@ -1,13 +1,20 @@
 const cartoes = [];
 
 exports.getTodosCartoes = (req, res) => {
+  if (cartoes.length === 0) {
+    res.status(200).json({ mensagem: 'Nenhum cartão cadastrado' });
+    return;
+  }
   res.json(cartoes);
 };
 
 exports.criarCartao = (req, res) => {
   const cartao = req.body;
-  cartoes.push(cartao);
-  res.status(201).json(cartao);
+  if (cartao) {
+    cartoes.push(cartao);
+    res.status(201).json(cartao);
+  }
+  res.status(400).json({ mensagem: 'Os dados do cartão são obrigatórios' });
 };
 
 exports.getCartaoPorId = (req, res) => {

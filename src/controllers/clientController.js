@@ -1,13 +1,20 @@
 const clientes = [];
 
 exports.getTodosClientes = (req, res) => {
-  res.json(clientes);
+  if (clientes.length === 0) {
+    res.status(404).json({ mensagem: 'Nenhum cliente cadastrado' });
+    return;
+  }
+  res.status(404).json(clientes);
 };
 
 exports.criarCliente = (req, res) => {
   const cliente = req.body;
-  clientes.push(cliente);
-  res.status(201).json(cliente);
+  if (cliente) {
+    clientes.push(cliente);
+    res.status(201).json(cliente);
+  }
+  res.status(400).json({ mensagem: 'Os dados do cliente são obrigatórios' });
 };
 
 exports.getClientePorId = (req, res) => {

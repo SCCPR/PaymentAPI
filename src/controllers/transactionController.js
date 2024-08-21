@@ -1,13 +1,21 @@
 const transacoes = [];
 
 exports.getTodasTransacoes = (req, res) => {
+  if (transacoes.length === 0) {
+    res.status(404).json({ mensagem: 'Nenhuma transacao econtrada.' });
+    return;
+  }
   res.json(transacoes);
 };
 
 exports.criarTransacao = (req, res) => {
   const transacao = req.body;
-  transacoes.push(transacao);
-  res.status(201).json(transacao);
+  if (transacao) {
+
+    transacoes.push(transacao)
+    res.status(201).json(transacao);
+  }
+  res.status(400).json({ mensagem: 'Os dados da transacao são obrigatórios' });
 };
 
 exports.getTransacaoPorId = (req, res) => {

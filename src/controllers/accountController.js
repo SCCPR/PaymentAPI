@@ -2,15 +2,22 @@ const contas = [];
 
 
 exports.getTodasContas = (req, res) => {
+  if (contas.length === 0) {
+    res.status(404).json({ messagem: "Nenhuma conta disponivel." })
+  }
   res.json(contas);
 };
 
 
 exports.criarConta = (req, res) => {
   const conta = req.body;
-  contas.push(conta);
-  res.status(201).json(conta);
+  if (conta) {
+    contas.push(conta);
+    res.status(201).json(conta);
+  }
+  res.status(400).json({ messagem: 'Os dados da conta são obrigatórios' });
 };
+
 
 
 exports.getContaPorId = (req, res) => {
