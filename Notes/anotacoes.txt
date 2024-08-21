@@ -1,0 +1,19 @@
+
+RELACIONAMENTOS E MODELAGEM
+
+1 – Sobre oque sera o sistema? 
+-  Sitema de gestão de pagamentos 
+
+2 - Requisitos do sistema
+- Conta/ Numero da conta/ nome do cliente/ data de nascimento/ criação da conta/ saldo
+- Sistema de transações/ id_translate/  entradas/ Saidas/ valores/ Data/ Tipo da transações (pix, deposito bancario, etc ...) 
+/ Quem enviou/ Quem recebeu.
+ 
+
+3- Como relacionar as entidades, que entidade relacionar;
+-  id_cliente > 
+- 
+
+3- Pacotes que serão utilizados
+- express 
+- 
