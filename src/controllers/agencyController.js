@@ -1,17 +1,39 @@
 const agencias = [];
 
 exports.getTodasAgencias = (req, res) => {
-  res.json(agencias);
+  if (agencias.length === 0) {
+    res.status(404).json({ message: "Nenhuma agencia encontrada." })
+  }
+  res.status(201).json(agencias);
 };
 
 exports.criarAgencia = (req, res) => {
-  const agencia = req.body;
-  agencias.push(agencia);
-  res.status(201).json(agencia);
+  const { id, nome, endereco } = req.body;
+
+  if (!id || !nome || !endereco) {
+    return res.status(400).json({ mensagem: 'Dados obrigatórios não fornecidos.' });
+  }
+
+  const agenciaExistente = agencias.find(a => a.id === id);
+  if (agenciaExistente) {
+    return res.status(400).json({ mensagem: 'Agência com este ID já existe.' });
+  }
+
+
+  const novaAgencia = { id, nome, endereco };
+  agencias.push(novaAgencia);
+  res.status(201).json(novaAgencia);
 };
 
 exports.getAgenciaPorId = (req, res) => {
-  const agencia = agencias.find(a => a.id === parseInt(req.params.id));
+  const id = parseInt(req.params.id);
+
+
+  if (isNaN(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido.' });
+  }
+
+  const agencia = agencias.find(a => a.id === id);
   if (agencia) {
     res.json(agencia);
   } else {
@@ -21,9 +43,22 @@ exports.getAgenciaPorId = (req, res) => {
 
 exports.atualizarAgencia = (req, res) => {
   const id = parseInt(req.params.id);
+
+
+  if (isNaN(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido.' });
+  }
+
   const index = agencias.findIndex(a => a.id === id);
   if (index !== -1) {
-    agencias[index] = { id, ...req.body };
+    const { nome, endereco } = req.body;
+
+
+    if (!nome || !endereco) {
+      return res.status(400).json({ mensagem: 'Dados obrigatórios não fornecidos.' });
+    }
+
+    agencias[index] = { id, nome, endereco };
     res.json(agencias[index]);
   } else {
     res.status(404).json({ mensagem: 'Agência não encontrada' });
@@ -32,6 +67,12 @@ exports.atualizarAgencia = (req, res) => {
 
 exports.deletarAgencia = (req, res) => {
   const id = parseInt(req.params.id);
+
+
+  if (isNaN(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido.' });
+  }
+
   const index = agencias.findIndex(a => a.id === id);
   if (index !== -1) {
     agencias.splice(index, 1);

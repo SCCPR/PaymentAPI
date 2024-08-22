@@ -1,4 +1,6 @@
+const User = require('PaymentAPI/user.js');
 const contas = [];
+
 
 
 exports.getTodasContas = (req, res) => {
@@ -10,14 +12,14 @@ exports.getTodasContas = (req, res) => {
 
 
 exports.criarConta = (req, res) => {
-  const conta = req.body;
-  if (conta) {
-    contas.push(conta);
-    res.status(201).json(conta);
+  const { name, idade } = req.body;
+  if (name.length > 4 && idade >= 18) {
+    const novaConta = new User(name, idade);
+    contas.push(novaConta);
+    res.status(201).json(novaConta);
   }
-  res.status(400).json({ messagem: 'Os dados da conta são obrigatórios' });
+  res.status(400).json({ mensagem: 'Os dados da conta são obrigatórios' });
 };
-
 
 
 exports.getContaPorId = (req, res) => {
@@ -33,18 +35,20 @@ exports.getContaPorId = (req, res) => {
 exports.atualizarConta = (req, res) => {
   const id = parseInt(req.params.id);
   const index = contas.findIndex(c => c.id === id);
-  if (index !== -1) {
-    contas[index] = { id, ...req.body };
+  const { name, idade } = req.body;
+
+  if (index !== -1 && name.length > 4 && idade >= 18) {
+    contas[index] = new User(name, idade);
     res.json(contas[index]);
   } else {
     res.status(404).json({ mensagem: 'Conta não encontrada' });
   }
 };
 
-
 exports.deletarConta = (req, res) => {
   const id = parseInt(req.params.id);
   const index = contas.findIndex(c => c.id === id);
+
   if (index !== -1) {
     contas.splice(index, 1);
     res.status(204).end();
