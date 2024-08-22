@@ -1,6 +1,5 @@
-const User = require('PaymentAPI/user.js');
+const User = require('../../user.js');
 const contas = [];
-
 
 
 exports.getTodasContas = (req, res) => {

@@ -11,7 +11,6 @@ exports.getTodosClientes = (req, res) => {
 exports.criarCliente = (req, res) => {
   const { id, nome, email } = req.body;
 
-
   if (!id || !nome || !email) {
     return res.status(400).json({ mensagem: 'Os dados do cliente são obrigatórios' });
   }
